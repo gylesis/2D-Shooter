@@ -7,8 +7,8 @@ namespace Project.PlayerLogic
     {
         [SerializeField] private WeaponService _weaponService;
 
-        [SerializeField] private float _speedMultiplier = 3f;
-        [SerializeField] private float _rotationMultiplier = 3;
+        [SerializeField] private float _speedMultiplier = 5f;
+        [SerializeField] private float _rotationMultiplier = 6f;
 
         [SerializeField] private UnitController _controller;
        
@@ -38,8 +38,6 @@ namespace Project.PlayerLogic
         private void Update()
         {
             RestrictBounds();
-
-            Rotation();
 
             if (Input.GetKey(KeyCode.Space))
             {
@@ -100,6 +98,8 @@ namespace Project.PlayerLogic
         private void FixedUpdate()
         {
             Move();
+            
+            Rotation();
         }
 
         private void Move()

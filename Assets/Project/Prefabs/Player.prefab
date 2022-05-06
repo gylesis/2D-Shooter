@@ -319,7 +319,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _weaponService: {fileID: 7600094774923498628}
   _speedMultiplier: 5
-  _rotationMultiplier: 2
+  _rotationMultiplier: 6
   _controller: {fileID: 3045830989229738481}
 --- !u!114 &7600094774923498628
 MonoBehaviour:
@@ -375,6 +375,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _spriteRenderer: {fileID: 691133052376652639}
+  _isInvulnerable: 0
 --- !u!114 &4282612294979421164
 MonoBehaviour:
   m_ObjectHideFlags: 0

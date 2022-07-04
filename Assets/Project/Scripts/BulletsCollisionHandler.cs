@@ -38,19 +38,17 @@ namespace Project
         {
             context.Bullet.CollisionDeath -= OnCollisionDeathHandle;
 
-            if (context.SenderSide == Side.Player)
-                _scoreUpdater.AddPlayerPoint();
-
-            if (context.SenderSide == Side.Bot)
-                _scoreUpdater.AddBotPoint();
-
-            _bullets.Remove(context.Bullet);
+            Debug.Log($"hit obj {context.HitObject}, player id {context.PlayerId}");
+            
+            /*_bullets.Remove(context.Bullet);
             GameObject hitObject = context.HitObject;
 
+            _scoreUpdater.AddPoints(context.PlayerId);
+            
             hitObject.GetComponent<VisualisationService>().OnDamaged();
             hitObject.GetComponent<InvulnerabilityService>().MakeInvulnerable();
 
-            Object.Destroy(context.Bullet.gameObject);
+            context.Bullet.Runner.Despawn(context.Bullet.Object);*/
         }
 
         private bool CheckForDeath(Bullet bullet)
@@ -59,7 +57,7 @@ namespace Project
 
             if (screenPos.x > Screen.width || screenPos.x < 0 || screenPos.y > Screen.height || screenPos.y < 0)
             {
-                Object.Destroy(bullet.gameObject);
+                bullet.Runner.Despawn(bullet.Object);
                 return true;
             }
 

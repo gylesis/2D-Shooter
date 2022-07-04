@@ -1,28 +1,28 @@
-﻿using UnityEngine;
+﻿using Fusion;
+using UnityEngine;
 
 namespace Project
 {
-    public class BulletSpawnService
+    public class BulletSpawnService : NetworkBehaviour
     {
-        private readonly Bullet _bulletPrefab;
+        private Bullet _bulletPrefab;
        
-        private readonly BulletsCollisionHandler _bulletsCollisionHandler;
+        private BulletsCollisionHandler _bulletsCollisionHandler;
 
-        public BulletSpawnService(Bullet bulletPrefab, BulletsCollisionHandler bulletsCollisionHandler)
+        public void Init(Bullet bulletPrefab, BulletsCollisionHandler bulletsCollisionHandler)
         {
             _bulletsCollisionHandler = bulletsCollisionHandler;
             _bulletPrefab = bulletPrefab;
         }
 
-        public Bullet Spawn(Vector2 origin)
+        public Bullet Spawn(NetworkRunner runner ,Vector2 origin)
         {
-            Bullet bullet = Object.Instantiate(_bulletPrefab, origin, Quaternion.identity);
+            Bullet bullet = runner.Spawn(_bulletPrefab, origin, Quaternion.identity, runner.LocalPlayer);
 
             _bulletsCollisionHandler.Register(bullet);
 
             return bullet;
         }
-       
     }
 
     public interface IUpdatable

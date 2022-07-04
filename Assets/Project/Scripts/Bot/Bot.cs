@@ -9,11 +9,13 @@ namespace Project.Bot
 
         [SerializeField] private WeaponService _weaponService;
         
+        /*
         public void Init(BotMovementService botMovementService, PlayerDestinationService playerDestinationService, BotWaypointsService botWaypointsService, BulletSpawnService bulletSpawnService)
         {
             _weaponService.Init(bulletSpawnService);
             _botBrain.Init(botMovementService ,playerDestinationService, botWaypointsService , _weaponService);
         }
+        */
 
     }
 

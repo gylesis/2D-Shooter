@@ -20,7 +20,7 @@ namespace Project.Bot
 
             Bot bot = Instantiate(_botPrefab, spawnPoint.transform.position, Quaternion.identity);
 
-            bot.Init(botMovementService, playerDestinationService, _botWaypointsService, bulletSpawnService);
+            //bot.Init(botMovementService, playerDestinationService, _botWaypointsService, bulletSpawnService);
 
             await Task.Delay(2000);
 

@@ -1,5 +1,5 @@
 ﻿using System;
-using Project.Score;
+using Fusion;
 using UnityEngine;
 
 namespace Project.PlayerLogic
@@ -7,15 +7,19 @@ namespace Project.PlayerLogic
     public class WeaponService : MonoBehaviour
     {
         [SerializeField] private Weapon[] _weapons;
-        [SerializeField] private Side _side;
 
         private Weapon _currentWeapon;
         private DateTime _lastShootTime;
 
         public Action BulletHit;
-        
-        public void Init(BulletSpawnService bulletSpawnService)
+        private NetworkRunner _runner;
+
+        public void Init(BulletSpawnService bulletSpawnService,NetworkRunner networkRunner)
         {
+            _runner = networkRunner;
+
+            Debug.Log(_runner.LocalPlayer.PlayerId);
+            
             foreach (Weapon weapon in _weapons)
                 weapon.Init(bulletSpawnService);
 
@@ -28,7 +32,7 @@ namespace Project.PlayerLogic
 
             if (dateTime.TotalSeconds > _currentWeapon.Cooldown)
             {
-                _currentWeapon.Fire(direction, _side, BulletHit);
+                _currentWeapon.Fire(direction, _runner, BulletHit);
                 _lastShootTime = DateTime.Now;
             }
         }

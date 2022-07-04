@@ -9,16 +9,16 @@ namespace Project.PlayerLogic
         [SerializeField] private Player _player;
         [SerializeField] private SpawnPoint[] _points;
 
-        public void Init(Camera camera,BulletSpawnService bulletSpawnService, params IPlayerSpawnedListener[] playerSpawnedListeners)
+        public void Init(Camera camera, BulletSpawnService bulletSpawnService, params IPlayerSpawnedListener[] playerSpawnedListeners)
         {
-            Transform availablePoint = GetAvailablePoint();
+            /*Transform availablePoint = GetAvailablePoint();
 
             Player player = Instantiate(_player, availablePoint.position, Quaternion.identity);
 
             player.Init(bulletSpawnService, camera);
 
             foreach (IPlayerSpawnedListener listener in playerSpawnedListeners)
-                listener.PlayerSpawned(player);
+                listener.PlayerSpawned(player);*/
         }
 
         public Transform GetAvailablePoint()

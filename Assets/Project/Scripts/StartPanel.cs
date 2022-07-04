@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -7,22 +8,35 @@ namespace Project
 {
     public class StartPanel : MonoBehaviour
     {
-        [SerializeField] private Button _button;
+        [SerializeField] private Button _hostButton;
+        [SerializeField] private Button _playButton;
+        [SerializeField] private CanvasGroup _canvasGroup;
 
-        [SerializeField] private CanvasGroup _canvasGroup;  
+        public UnityEvent HostGame { get; set; } = new UnityEvent();
+
+        public UnityEvent ConnectGameEvent { get; set; } = new UnityEvent();
         
-        public Action GameStart { get; set; }
-
         private void Awake()
         {
-            _button.onClick.AddListener((StartGame));
+            _hostButton.onClick.AddListener(StartGame);
+            _playButton.onClick.AddListener(ConnectGame);
+        }
+
+        private void ConnectGame()
+        {
+            ConnectGameEvent?.Invoke();
+            
+            _hostButton.enabled = false;
+            _canvasGroup.alpha = 0;
+            _canvasGroup.interactable = false;
+            _canvasGroup.blocksRaycasts = false;
         }
 
         private void StartGame()
         {
-            GameStart.Invoke();
+            HostGame.Invoke();
 
-            _button.enabled = false;
+            _hostButton.enabled = false;
             _canvasGroup.alpha = 0;
             _canvasGroup.interactable = false;
             _canvasGroup.blocksRaycasts = false;
@@ -36,10 +50,12 @@ namespace Project
         
         private void OnDestroy()
         {
-            _button.onClick.RemoveAllListeners();
+            _hostButton.onClick.RemoveAllListeners();
+            _playButton.onClick.RemoveAllListeners();
+            
+            HostGame.RemoveAllListeners();
+            ConnectGameEvent.RemoveAllListeners();
         }
-        
-        
         
     }
 }

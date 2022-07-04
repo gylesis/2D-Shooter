@@ -1,4 +1,5 @@
 ﻿using System;
+using Fusion;
 using Project.Score;
 using UnityEngine;
 
@@ -18,23 +19,24 @@ namespace Project.PlayerLogic
             _bulletSpawnService = bulletSpawnService;
         }
 
-        public void Fire(Vector2 direction, Side side, Action bulletHit = null)
+        public void Fire(Vector2 direction, NetworkRunner runner, Action bulletHit = null)
         {
-            Bullet bullet = _bulletSpawnService.Spawn(_pivot.position);
+            Bullet bullet = _bulletSpawnService.Spawn(runner,_pivot.position);
 
             var bulletContext = new BulletContext();
 
             bulletContext.Force = direction * _power;
-            bulletContext.SenderSide = side;
-
+            bulletContext.OwnerId = runner.LocalPlayer.PlayerId;
+            
             bullet.Setup(bulletContext);
 
             if (bulletHit != null)
             {
                 bullet.CollisionDeath += BulletCollisionDeath;
                 bullet.Destroyed += Destroyed;
-                
+
                 void BulletCollisionDeath(BulletDeathCollisionContext context) => bulletHit.Invoke();
+
                 void Destroyed(Bullet bussllet)
                 {
                     bussllet.CollisionDeath -= BulletCollisionDeath;

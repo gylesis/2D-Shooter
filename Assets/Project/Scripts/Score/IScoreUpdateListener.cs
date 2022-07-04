@@ -5,15 +5,12 @@
         void UpdateScore(ScoreUpdateContext context);
     }
 
-    public enum Side
-    {
-        Player,
-        Bot
-    }
-
     public struct ScoreUpdateContext
     {
-        public Side Side;
-        public int Points;
+        public PlayerInfo Player1;
+        public PlayerInfo Player2;
+
+        public int Points1;
+        public int Points2;
     }
 }

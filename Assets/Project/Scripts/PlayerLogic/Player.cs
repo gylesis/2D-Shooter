@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Fusion;
 using UnityEngine;
 
 namespace Project.PlayerLogic
 {
-    public class Player : MonoBehaviour
+    public class Player : NetworkBehaviour, IPlayerLeft
     {
         [SerializeField] private WeaponService _weaponService;
 
@@ -11,7 +11,9 @@ namespace Project.PlayerLogic
         [SerializeField] private float _rotationMultiplier = 6f;
 
         [SerializeField] private UnitController _controller;
-       
+
+        public PlayerInfo PlayerInfo { get; set; }
+        
         private Camera _camera;
         private float _screenWidthWorld;
         private float _screenHeightWorld;
@@ -19,7 +21,7 @@ namespace Project.PlayerLogic
         public void Init(BulletSpawnService bulletSpawnService, Camera camera)
         {
             _camera = camera;
-            _weaponService.Init(bulletSpawnService);
+            _weaponService.Init(bulletSpawnService, Runner);
             
             var rightUp = new Vector2(Screen.width,Screen.height);
             var rightDown = new Vector2(Screen.width,0);
@@ -34,15 +36,55 @@ namespace Project.PlayerLogic
             _screenWidthWorld = (leftDownWorld - rightDownWorld).magnitude;
             _screenHeightWorld = (leftUpWorld - leftDownWorld).magnitude;
         }
-        
+
+        public override void Spawned()
+        {
+            if (Object.HasInputAuthority)
+            {
+                _camera = FindObjectOfType<Camera>();
+                _weaponService.Init(FindObjectOfType<BulletSpawnService>(), Runner);
+            }
+        }
+
+        public override void FixedUpdateNetwork()
+        {
+            if (GetInput(out NetworkInputData data))
+            {
+                _controller.Move(data.Direction * _speedMultiplier * Runner.DeltaTime);
+
+                if (data.FirePressed)
+                {
+                    _weaponService.Fire(transform.right);
+                }
+
+                Rotation(data);
+            }
+        }
+
         private void Update()
         {
             RestrictBounds();
+        }
+        
+        private void Rotation(NetworkInputData data)
+        {
+            var rightArrowPressed = data.RightArrowPressed;
+            var leftArrowPressed = data.LeftArrowPressed;
 
-            if (Input.GetKey(KeyCode.Space))
+            var rotationZ = transform.rotation.eulerAngles.z;
+
+            if (rightArrowPressed)
             {
-                _weaponService.Fire(transform.right);
+                rotationZ += -_rotationMultiplier;
             }
+            else if (leftArrowPressed)
+            {
+                rotationZ += _rotationMultiplier;
+            }
+
+            Quaternion quaternion = Quaternion.Euler(0, 0, rotationZ);
+
+            _controller.Rotate(quaternion);
         }
 
         private void RestrictBounds()
@@ -74,65 +116,12 @@ namespace Project.PlayerLogic
             transform.position = playerPos;
         }
 
-        private void Rotation()
+        public void PlayerLeft(PlayerRef player)
         {
-            var rightArrowPressed = Input.GetKey(KeyCode.RightArrow);
-            var leftArrowPressed = Input.GetKey(KeyCode.LeftArrow);
-
-            var rotationZ = transform.rotation.eulerAngles.z;
-
-            if (rightArrowPressed)
+            if (Object.HasInputAuthority)
             {
-                rotationZ += -_rotationMultiplier;
+                Runner.Despawn(Object);
             }
-            else if (leftArrowPressed)
-            {
-                rotationZ += _rotationMultiplier;
-            }
-
-            Quaternion quaternion = Quaternion.Euler(0, 0, rotationZ);
-
-            _controller.Rotate(quaternion);
         }
-
-        private void FixedUpdate()
-        {
-            Move();
-            
-            Rotation();
-        }
-
-        private void Move()
-        {
-            Vector2 moveDirection = Vector2.zero;
-
-            if (Input.GetKey(KeyCode.W))
-            {
-                moveDirection.y += 1;
-            }
-
-            if (Input.GetKey(KeyCode.A))
-            {
-                moveDirection.x -= 1;
-            }
-
-            if (Input.GetKey(KeyCode.S))
-            {
-                moveDirection.y -= 1;
-            }
-
-            if (Input.GetKey(KeyCode.D))
-            {
-                moveDirection.x += 1;
-            }
-
-            moveDirection.Normalize();
-
-            moveDirection *= _speedMultiplier;
-
-            _controller.Move(moveDirection);
-           
-        }
-        
     }
 }

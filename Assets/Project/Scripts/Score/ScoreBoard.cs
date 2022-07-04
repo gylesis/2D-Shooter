@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Fusion;
 using TMPro;
 using UnityEngine;
 
@@ -16,18 +16,24 @@ namespace Project.Score
             UpdateScore(new ScoreUpdateContext());
         }
 
-        public void UpdateScore(ScoreUpdateContext context)
+        [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+        public void UpdateScore(ScoreUpdateContext context) 
         {
-            if (context.Side == Side.Player)
+//            Debug.Log("Update");
+            
+            string player1Name = "Player1";
+            string player2Name = "Player2";
+            
+            if (context.Player1 != null)    
             {
-                _playerScore += context.Points;
+                player1Name = context.Player1.Name;
+                player2Name = context.Player2.Name;
             }
-            else if (context.Side == Side.Bot)
-            {
-                _botScore += context.Points;
-            }
-
-            _scoreText.text = $"<color=green>{_playerScore}</color> : <color=red>{_botScore}</color>";
+           
+            _scoreText.text = $"<color=green>{player1Name} : {context.Points1}</color>\n<color=red>{player2Name} : {context.Points2}</color>";
         }
+        
     }
+    
+    
 }

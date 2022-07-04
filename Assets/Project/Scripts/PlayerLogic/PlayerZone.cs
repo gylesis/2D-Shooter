@@ -10,16 +10,6 @@ namespace Project.Bot
 
         public Action<PlayerZone> PlayerStayed { get; set; }
         
-        private void OnTriggerStay2D(Collider2D other)
-        {
-            if(other.TryGetComponent<MyTag>(out var tag))
-            {
-                if (tag.Side == Side.Player)
-                {
-                    PlayerStayed.Invoke(this);
-                }
-            }
-        }
 
         public void Highlight(Color color)
         {

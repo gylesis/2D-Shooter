@@ -44,7 +44,7 @@ namespace Project.Bot
 
         public void Update()
         {
-            Vector3 direction = (_transform.position - _playerDestinationService.Player.transform.position).normalized;
+            /*Vector3 direction = (_transform.position - _playerDestinationService.Player.transform.position).normalized;
 
             var angle = -Mathf.Atan2(direction.y, -direction.x) * Mathf.Rad2Deg;
 
@@ -52,7 +52,7 @@ namespace Project.Bot
 
             _unitController.Rotate(lookRotation);
 
-            _weaponService.Fire(_transform.right);
+            _weaponService.Fire(_transform.right);*/
         }
 
         public void Exit()
